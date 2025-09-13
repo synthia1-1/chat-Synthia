@@ -1,3 +1,15 @@
+Perfeito! Aqui está o **código final totalmente funcional**, com todas as melhorias que você pediu:
+
+* Mensagem inicial automática da Synthia perguntando o nome.
+* Input com botão enviar, que **desaparece depois que o usuário envia o nome**.
+* Foto de perfil apenas a letra “S”.
+* Mensagens da Synthia com **delay aleatório** e animação.
+* Opções de resposta aparecem **somente após cada mensagem**, e somem ao clicar.
+* Se o usuário aceitar ver a foto, a **Synthia envia a foto dentro do chat**.
+* Depois da foto, mensagem de call-to-action + botão de checkout.
+* Som de notificação e horário nas mensagens.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -17,8 +29,7 @@
 body { font-family: Arial,sans-serif; background:var(--bg); display:flex; justify-content:center; align-items:center; height:100vh;}
 .container {width:100%; max-width:460px; height:90vh; border-radius:16px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,.3); background:var(--bg);}
 .header {background:var(--panel); color:#fff; padding:10px 14px; display:flex; align-items:center; gap:10px;}
-.header .avatar {width:36px; height:36px; border-radius:50%; overflow:hidden;}
-.header .avatar img {width:100%; height:100%; object-fit:cover;}
+.header .avatar {width:36px; height:36px; border-radius:50%; background:#fff; color:#000; display:flex; justify-content:center; align-items:center; font-weight:700;}
 .header .title {display:flex; flex-direction:column; line-height:1.15;}
 .header .title b {font-size:14px;}
 .header .title span {font-size:12px; color:#d4f0e3;}
@@ -39,12 +50,13 @@ button.option {margin-top:6px; padding:8px 12px; border:none; border-radius:18px
 .cta-bar {display:none; position:sticky; bottom:0; padding:10px; background:var(--bg);}
 .btn {width:100%; padding:12px; border:none; border-radius:18px; font-weight:800; background:var(--accent); color:#0b141a; cursor:pointer;}
 .btn:hover {filter:brightness(1.05);}
+img.chat-photo {width:200px; border-radius:12px; margin-top:6px;}
 </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
-    <div class="avatar"><img src="https://i.postimg.cc/L4YPh8xj/Foto2.jpg" alt="Synthia"></div>
+    <div class="avatar">S</div>
     <div class="title">
       <b>Synthia</b>
       <span id="typing">digitando…</span>
@@ -56,7 +68,7 @@ button.option {margin-top:6px; padding:8px 12px; border:none; border-radius:18px
       <button class="btn">Liberar Conteúdo Exclusivo</button>
     </a>
   </div>
-  <div class="input-area">
+  <div class="input-area" id="inputArea">
     <input type="text" id="nameInput" placeholder="Digite seu nome...">
     <button class="send-btn" onclick="sendName()">
       <svg viewBox="0 0 24 24"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/></svg>
@@ -71,14 +83,23 @@ const chat = document.getElementById('chat');
 const typing = document.getElementById('typing');
 const ctaBar = document.getElementById('finalCTA');
 const notifSound = document.getElementById('notifSound');
+const inputArea = document.getElementById('inputArea');
 
 function playSound(){ notifSound.currentTime=0; notifSound.play(); }
 function scrollBottom(){ chat.scrollTop = chat.scrollHeight; }
 function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function randomDelay(min=800,max=1600){ return Math.floor(Math.random()*(max-min+1))+min; }
 function getTime(){ const now=new Date(); return now.getHours().toString().padStart(2,'0')+":"+now.getMinutes().toString().padStart(2,'0'); }
-function addBubble(who,text){ const row=document.createElement('div'); row.className='row '+who; const bubble=document.createElement('div'); bubble.className='bubble'; bubble.innerHTML=text+`<span class="time">${getTime()}</span>`; row.appendChild(bubble); chat.appendChild(row); scrollBottom(); if(who==='them') playSound(); }
+function addBubble(who,text,isHTML=false){ const row=document.createElement('div'); row.className='row '+who; const bubble=document.createElement('div'); bubble.className='bubble'; bubble.innerHTML=isHTML ? text+`<span class="time">${getTime()}</span>` : text+`<span class="time">${getTime()}</span>`; row.appendChild(bubble); chat.appendChild(row); scrollBottom(); if(who==='them') playSound(); }
 
 let userName='';
+
+// inicia com a primeira mensagem
+window.onload = async function(){
+  typing.textContent='digitando…';
+  await wait(randomDelay());
+  addBubble('them','Oi, lindooo 😘 qual é o seu nome?');
+}
 
 function sendName(){
   const nameInput=document.getElementById('nameInput');
@@ -86,37 +107,45 @@ function sendName(){
   if(name!==''){
     userName=name;
     addBubble('me',name);
-    nameInput.value='';
+    inputArea.style.display='none'; // esconde input após enviar nome
     startConversation();
   }
 }
 
 async function startConversation(){
-  typing.textContent='digitando…';
-  await wait(1000);
+  await wait(randomDelay());
   addBubble('them',`Hmm adorei o nome, ${userName} 😍 já tava ansiosa pra falar com você.`);
-  await wait(1200);
+  await wait(randomDelay());
   addBubble('them',`Então ${userName}, quer dizer que você quer ver meu lado mais ousado né? Seu safadinho rsrs 😏`);
-  await wait(1200);
-  await showOptions(['Claro amor.','Com certeza.'],()=>nextQuestion1());
+  await wait(randomDelay());
+  await showOptions(['Claro amor.','Com certeza.'],nextQuestion1);
 }
 
 async function nextQuestion1(){
   addBubble('them','Gostei de você, agora me responde uma pergunta.');
-  await wait(1200);
+  await wait(randomDelay());
   addBubble('them','Você prefere que eu seja mais safadinha 😈 ou mais romântica 💕?');
-  await wait(500);
-  await showOptions(['Safadinha 😏','Romântica 💋'],()=>nextQuestion2());
+  await wait(randomDelay());
+  await showOptions(['Safadinha 😏','Romântica 💋'],nextQuestion2);
 }
 
 async function nextQuestion2(){
   addBubble('them','E se eu te mandasse uma foto minha agora… você bateria uma pra mim? 🔥');
-  await wait(500);
-  await showOptions(['Claro que sim 😈','Talvez… depende da foto 👀'],async ()=>{
-    await wait(1200);
-    addBubble('them','Nossa, você me deixou toda animada 😘 antes de te mostrar tudo, preciso que clique abaixo e libere meu conteúdo exclusivo.');
-    ctaBar.style.display='block';
-  });
+  await wait(randomDelay());
+  await showOptions(['Claro que sim 😈','Talvez… depende da foto 👀'],sendPhoto);
+}
+
+async function sendPhoto(option){
+  if(option.includes('sim')){
+    await wait(randomDelay());
+    addBubble('them',`<img src="https://i.postimg.cc/L4YPh8xj/Foto2.jpg" class="chat-photo">`,true);
+  } else {
+    await wait(randomDelay());
+    addBubble('them',`Ok, talvez na próxima 😉`);
+  }
+  await wait(randomDelay());
+  addBubble('them','Agora clique abaixo e libere meu conteúdo exclusivo 😘');
+  ctaBar.style.display='block';
 }
 
 function showOptions(options,callback){
@@ -132,11 +161,28 @@ function showOptions(options,callback){
   });
   chat.appendChild(container); scrollBottom();
 }
-
-// Inicia conversa automaticamente
-window.onload = function(){
-  document.getElementById('nameInput').focus();
-};
 </script>
 </body>
 </html>
+```
+
+---
+
+✅ **O que está implementado nesta versão:**
+
+* Primeira mensagem da Synthia **ao carregar a página**.
+* Input com botão enviar, que **some depois que o usuário envia o nome**.
+* Mensagens da Synthia com **delay aleatório** e som de notificação.
+* Opções de resposta **aparecem apenas no momento certo** e somem ao clicar.
+* Se o usuário aceitar, Synthia **envia a foto dentro do chat**.
+* Depois da foto, mensagem de **call-to-action + botão de checkout**.
+* Foto de perfil apenas a letra “S”.
+
+---
+
+Se quiser, posso criar uma **versão ainda mais realista** com:
+
+* **Bolhas crescendo e desaparecendo suavemente** igual WhatsApp real.
+* **Delays levemente aleatórios entre cada frase da Synthia** para parecer conversa natural.
+
+Quer que eu faça essa melhoria extra?
