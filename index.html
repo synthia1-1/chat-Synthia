@@ -157,6 +157,9 @@ async function sendPhoto(option){
   await showTyping(randomDelay());
   addBubble('them',`Nossa, ${userName}… fiquei toda animada 😘 não vejo a hora de você ver meu lado mais secreto. Clique abaixo e libere meu conteúdo exclusivo agora mesmo 🔥💦`);
   ctaBar.style.display='block';
+  
+  // muda status para online após última mensagem
+  typingEl.textContent = 'online';
 }
 
 // opções
