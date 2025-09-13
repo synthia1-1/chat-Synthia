@@ -1,177 +1,288 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chat Synthia - WhatsApp Style</title>
-<style>
-:root {
-  --bg: #e5ddd5;
-  --panel: #075e54;
-  --me: #dcf8c6;
-  --them: #ffffff;
-  --accent: #25D366;
-  --text: #000000;
-}
-* { box-sizing:border-box; margin:0; padding:0; }
-body { font-family: Arial, sans-serif; background:var(--bg); display:flex; justify-content:center; align-items:center; height:100vh; }
-.container { width:100%; max-width:460px; height:90vh; border-radius:16px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,.3); background:var(--bg); }
-.header { background:var(--panel); color:#fff; padding:10px 14px; display:flex; align-items:center; gap:10px; }
-.header .avatar { width:36px; height:36px; border-radius:50%; background:#fff; display:grid; place-items:center; color:#000; font-weight:700; }
-.header .title { display:flex; flex-direction:column; line-height:1.15; }
-.header .title b { font-size:14px; }
-.header .title span { font-size:12px; color:#d4f0e3; }
-.chat { flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; }
-.row { display:flex; margin:6px 0; }
-.row.them { justify-content:flex-start; }
-.row.me { justify-content:flex-end; }
-.bubble { max-width:75%; padding:10px 14px; border-radius:18px; font-size:14px; line-height:1.35; position:relative; word-wrap:break-word; }
-.them .bubble { background:var(--them); color:var(--text); border-bottom-left-radius:0; }
-.me .bubble { background:var(--me); color:#000; border-bottom-right-radius:0; }
-.time { display:block; font-size:11px; color:#999; margin-top:4px; text-align:right; opacity:.85; }
-input { width:100%; padding:10px; border-radius:18px; border:1px solid #ccc; margin-top:6px; }
-button.option { margin-top:6px; padding:8px 12px; border:none; border-radius:18px; cursor:pointer; background:#128C7E; font-weight:600; color:#fff; margin-right:6px; opacity:0; transform:translateY(10px); transition:opacity 0.5s ease, transform 0.5s ease; }
-button.option.show { opacity:1; transform:translateY(0); }
-.cta-bar { display:none; position:sticky; bottom:0; padding:10px; background:var(--bg); }
-.btn { width:100%; padding:12px; border:none; border-radius:18px; font-weight:800; background:var(--accent); color:#0b141a; cursor:pointer; }
-.btn:hover { filter:brightness(1.05); }
-img.fade-img { max-width:100%; border-radius:16px; margin:10px 0; opacity:0; transform:translateY(10px); transition:opacity 1s ease, transform 1s ease; }
-img.fade-img.show { opacity:1; transform:translateY(0); }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chat Simulado</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ece5dd;
+      font-family: Arial, sans-serif;
+    }
+    .chat-container {
+      width: 100%;
+      height: 100%;
+      max-width: 600px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ccc;
+    }
+    /* Cabeçalho estilo WhatsApp */
+    .chat-header {
+      display: flex;
+      align-items: center;
+      background: #075e54;
+      color: #fff;
+      padding: 10px;
+    }
+    .chat-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    .chat-header .info {
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-header .info .name {
+      font-weight: bold;
+    }
+    .chat-header .info .status {
+      font-size: 12px;
+      color: #d0f0d0;
+    }
+    /* Caixa de chat */
+    .chat-box {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #ece5dd;
+    }
+    .message {
+      max-width: 75%;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 18px;
+      line-height: 1.4;
+      word-wrap: break-word;
+      position: relative;
+    }
+    .bot {
+      background: #fff;
+      align-self: flex-start;
+      border: 1px solid #ddd;
+    }
+    .user {
+      background: #dcf8c6;
+      align-self: flex-end;
+    }
+    .time {
+      font-size: 10px;
+      color: gray;
+      position: absolute;
+      bottom: -12px;
+      right: 10px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+    .option-btn {
+      background: #25d366;
+      color: #fff;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 18px;
+      cursor: pointer;
+      text-align: center;
+      font-size: 16px;
+    }
+    .option-btn:hover {
+      background: #1eb346;
+    }
+    .input-area {
+      display: flex;
+      border-top: 1px solid #ccc;
+      padding: 8px;
+      background: #f0f0f0;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 18px;
+      font-size: 16px;
+      outline: none;
+    }
+    .send-btn {
+      background: #25d366;
+      border: none;
+      border-radius: 50%;
+      margin-left: 8px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .send-btn svg {
+      fill: #fff;
+      width: 20px;
+      height: 20px;
+    }
+    /* Digitando... */
+    .typing {
+      background: #fff;
+      align-self: flex-start;
+      border: 1px solid #ddd;
+      border-radius: 18px;
+      padding: 8px 12px;
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: #888;
+      border-radius: 50%;
+      margin: 0 2px;
+      animation: blink 1.4s infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink {
+      0%, 80%, 100% { opacity: 0; }
+      40% { opacity: 1; }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-<div class="header">
-  <div class="avatar">S</div>
-  <div class="title">
-    <b>Synthia</b>
-    <span id="typing">online</span>
+  <div class="chat-container">
+    <!-- Cabeçalho estilo WhatsApp -->
+    <div class="chat-header">
+      <img src="https://i.postimg.cc/L4YPh8xj/Foto2.jpg" alt="Foto perfil">
+      <div class="info">
+        <div class="name">Lindinha 🔥</div>
+        <div class="status">online</div>
+      </div>
+    </div>
+
+    <div class="chat-box" id="chatBox">
+      <div class="message bot">Oi amor 😘 Me fala seu nome pra eu te chamar direitinho?<span class="time">20:14</span></div>
+    </div>
+
+    <div class="input-area">
+      <input type="text" id="nameInput" placeholder="Digite seu nome..." inputmode="text">
+      <button class="send-btn" onclick="sendName()">
+        <svg viewBox="0 0 24 24"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/></svg>
+      </button>
+    </div>
   </div>
-</div>
-<div id="chat" class="chat" aria-live="polite"></div>
-<div class="cta-bar" id="finalCTA">
-  <a id="cta" href="https://pay.kirvano.com/8a41c662-4338-4cca-a14d-256db597d25e" target="_blank" rel="nofollow noopener">
-    <button class="btn">Liberar Conteúdo Exclusivo</button>
-  </a>
-</div>
-</div>
-<script>
-const chat = document.getElementById('chat');
-const typing = document.getElementById('typing');
-const ctaBar = document.getElementById('finalCTA');
-let userName = '';
 
-function addBubble(who, text){
-  const row = document.createElement('div');
-  row.className = 'row '+who;
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble';
-  bubble.innerHTML = text + `<span class="time">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>`;
-  row.appendChild(bubble);
-  chat.appendChild(row);
-  chat.scrollTop = chat.scrollHeight;
-}
+  <!-- Som de notificação -->
+  <audio id="notifSound" src="https://www.myinstants.com/media/sounds/whatsapp-notification.mp3"></audio>
 
-function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+  <script>
+    const chatBox = document.getElementById("chatBox");
+    const notifSound = document.getElementById("notifSound");
 
-async function typeMessage(msg){
-  typing.textContent = 'digitando…';
-  await wait(msg.length*70 + Math.random()*300); // simula digitação
-  typing.textContent = 'online';
-  addBubble('them', msg);
-}
+    function scrollToBottom() { chatBox.scrollTop = chatBox.scrollHeight; }
+    function playSound() { notifSound.currentTime = 0; notifSound.play(); }
+    function getTime() {
+      const now = new Date();
+      return now.getHours().toString().padStart(2,"0") + ":" + now.getMinutes().toString().padStart(2,"0");
+    }
 
-async function showButtons(btns, callback){
-  for(let i=0;i<btns.length;i++){
-    setTimeout(()=> btns[i].classList.add('show'), i*150);
-  }
-  await new Promise(r=>{
-    btns.forEach(btn=>{
-      btn.onclick=()=>{ 
-        btns.forEach(b=>b.remove());
-        callback(btn.innerText); 
-        r();
+    function showTyping(callback) {
+      const typing = document.createElement("div");
+      typing.classList.add("typing");
+      typing.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+      chatBox.appendChild(typing);
+      scrollToBottom();
+      setTimeout(() => { typing.remove(); callback(); }, 1500);
+    }
+
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.classList.add("message", sender);
+      msg.innerHTML = text + `<span class="time">${getTime()}</span>`;
+      chatBox.appendChild(msg);
+      scrollToBottom();
+      if(sender === "bot") playSound();
+    }
+
+    function sendName() {
+      const name = document.getElementById("nameInput").value.trim();
+      if(name!=="") {
+        addMessage(name,"user");
+        document.getElementById("nameInput").value = "";
+        setTimeout(()=>{ showTyping(()=>{ 
+          addMessage(`Prazer, ${name} 😍 Agora me diz... você tá sozinho(a) aí?`,"bot");
+          showOptions(["Sim, estou 👀","Não, mas quero mesmo assim 🔥"]);
+        });},1000);
       }
-    });
-  });
-}
+    }
 
-async function startChat(){
-  await typeMessage('Oi, lindooo 😘 qual é o seu nome?');
-  const nameInput = document.createElement('input');
-  nameInput.type='text'; nameInput.placeholder='Digite seu nome';
-  chat.appendChild(nameInput); nameInput.focus();
+    function showOptions(options) {
+      const container = document.createElement("div");
+      container.classList.add("options");
+      options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.classList.add("option-btn");
+        btn.innerText = option;
+        btn.onclick = () => handleOption(option);
+        container.appendChild(btn);
+      });
+      chatBox.appendChild(container);
+      scrollToBottom();
+    }
 
-  await new Promise(r=>{
-    nameInput.addEventListener('keypress', function(e){
-      if(e.key==='Enter' && nameInput.value.trim()!==''){
-        userName=nameInput.value.trim();
-        addBubble('me', userName);
-        nameInput.remove();
-        r();
-      }
-    });
-  });
-
-  await typeMessage(`Hmm adorei o nome, ${userName} 😍 já tava ansiosa pra falar com você.`);
-  await typeMessage(`Então ${userName}, quer dizer que você quer ver meu lado mais ousado né? Seu safadinho rsrs 😏`);
-
-  const btns1 = [];
-  ['Claro amor.', 'Com certeza.'].forEach(txt=>{
-    const b=document.createElement('button'); b.className='option'; b.innerText=txt;
-    chat.appendChild(b); btns1.push(b);
-  });
-  await showButtons(btns1, async (text)=>{
-    addBubble('me',text);
-    await typeMessage('Gostei de você, agora me responde uma pergunta.');
-  });
-
-  await typeMessage('Você prefere que eu seja mais safadinha 😈 ou mais romântica 💕?');
-  const btns2 = [];
-  ['Safadinha 😏','Romântica 💋'].forEach(txt=>{
-    const b=document.createElement('button'); b.className='option'; b.innerText=txt;
-    chat.appendChild(b); btns2.push(b);
-  });
-  await showButtons(btns2, text=> addBubble('me',text));
-
-  await typeMessage(`E se eu te mandasse uma foto minha agora… você bateria uma pra mim? 🔥`);
-  const btns3 = [];
-  ['Claro que sim 😈','Talvez… depende da foto 👀'].forEach(txt=>{
-    const b=document.createElement('button'); b.className='option'; b.innerText=txt;
-    chat.appendChild(b); btns3.push(b);
-  });
-
-  await showButtons(btns3, async text=>{
-    addBubble('me',text);
-    await typeMessage('Haha, sabia que você ia adorar 😏 olha só a foto que preparei pra você…');
-
-    const img=document.createElement('img');
-    img.src='https://i.postimg.cc/L4YPh8xj/Foto2.jpg';
-    img.alt='Foto de Synthia';
-    img.className='fade-img';
-    chat.appendChild(img);
-    setTimeout(()=> img.classList.add('show'),100);
-    chat.scrollTop = chat.scrollHeight;
-
-    await wait(1200);
-    await typeMessage(`Gostou, ${userName}? 😘`);
-    await wait(800);
-    await typeMessage('Tenho algumas surpresas só para você… quer ver?');
-
-    const btns4 = [];
-    ['Quero sim 🔥','Claro 😘'].forEach(txt=>{
-      const b=document.createElement('button'); b.className='option'; b.innerText=txt;
-      chat.appendChild(b); btns4.push(b);
-    });
-    await showButtons(btns4, async text=>{
-      addBubble('me',text);
-      await typeMessage('Então corre que é por tempo limitado, só clicando no botão abaixo pra liberar tudo 💕');
-      ctaBar.style.display='block';
-    });
-  });
-}
-
-startChat();
-</script>
+    function handleOption(option) {
+      addMessage(option,"user");
+      setTimeout(()=>{
+        showTyping(()=>{
+          if(option.includes("Sim")) {
+            addMessage("Hummm 👀 Então olha isso que eu tenho pra você…","bot");
+            setTimeout(()=>{
+              showTyping(()=>{
+                const msg = document.createElement("div");
+                msg.classList.add("message","bot");
+                msg.innerHTML = `<img src="https://i.postimg.cc/L4YPh8xj/Foto2.jpg" style="max-width:100%; border-radius:8px;"><span class="time">${getTime()}</span>`;
+                chatBox.appendChild(msg);
+                scrollToBottom();
+                playSound();
+                setTimeout(()=>{
+                  showTyping(()=>{ 
+                    addMessage("Quer ver mais sem censura? Só acessar aqui 👉","bot");
+                    setTimeout(()=>{ addMessage("https://pay.kirvano.com/8a41c662-4338-4cca-a14d-256db597d25e","bot"); },1500);
+                  });
+                },2000);
+              });
+            },2000);
+          } else {
+            addMessage("Adoro essa ousadia 😏🔥 Então olha isso…","bot");
+            setTimeout(()=>{
+              showTyping(()=>{
+                const msg = document.createElement("div");
+                msg.classList.add("message","bot");
+                msg.innerHTML = `<img src="https://i.postimg.cc/L4YPh8xj/Foto2.jpg" style="max-width:100%; border-radius:8px;"><span class="time">${getTime()}</span>`;
+                chatBox.appendChild(msg);
+                scrollToBottom();
+                playSound();
+                setTimeout(()=>{
+                  showTyping(()=>{ 
+                    addMessage("Se quiser mais, é só entrar aqui 👉","bot");
+                    setTimeout(()=>{ addMessage("https://pay.kirvano.com/8a41c662-4338-4cca-a14d-256db597d25e","bot"); },1500);
+                  });
+                },2000);
+              });
+            },2000);
+          }
+        });
+      },1000);
+    }
+  </script>
 </body>
 </html>
