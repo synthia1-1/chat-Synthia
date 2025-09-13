@@ -90,4 +90,55 @@ async function startChat(){
   });
 
   await wait(1200);
-  addBubble('them',`Hmm adorei o nome, ${userName} 😍 já tava ansiosa p
+  addBubble('them',`Hmm adorei o nome, ${userName} 😍 já tava ansiosa pra falar com você.`);
+  await wait(1000);
+  addBubble('them',`Então ${userName}, quer dizer que você quer ver meu lado mais ousado né? Seu safadinho rsrs 😏`);
+
+  await new Promise(r=>{
+    const btn1=document.createElement('button'); btn1.className='option'; btn1.innerText='Claro amor.';
+    const btn2=document.createElement('button'); btn2.className='option'; btn2.innerText='Com certeza.';
+    chat.appendChild(btn1); chat.appendChild(btn2);
+    typing.textContent='online';
+    btn1.onclick=()=>{ addBubble('me',btn1.innerText); btn1.remove(); btn2.remove(); addBubble('them','Gostei de você, agora me responde uma pergunta.'); typing.textContent='digitando…'; r(); };
+    btn2.onclick=()=>{ addBubble('me',btn2.innerText); btn1.remove(); btn2.remove(); addBubble('them','Gostei de você, agora me responde uma pergunta.'); typing.textContent='digitando…'; r(); };
+  });
+
+  await wait(1000);
+  addBubble('them','Você prefere que eu seja mais safadinha 😈 ou mais romântica 💕?');
+  await new Promise(r=>{
+    const btn1=document.createElement('button'); btn1.className='option'; btn1.innerText='Safadinha 😏';
+    const btn2=document.createElement('button'); btn2.className='option'; btn2.innerText='Romântica 💋';
+    chat.appendChild(btn1); chat.appendChild(btn2);
+    typing.textContent='online';
+    btn1.onclick=()=>{ addBubble('me',btn1.innerText); btn1.remove(); btn2.remove(); r(); };
+    btn2.onclick=()=>{ addBubble('me',btn2.innerText); btn1.remove(); btn2.remove(); r(); };
+  });
+
+  typing.textContent='digitando…';
+  await wait(1200);
+  addBubble('them',`E se eu te mandasse uma foto minha agora… você bateria uma pra mim? 🔥`);
+  await new Promise(r=>{
+    const btn1=document.createElement('button'); btn1.className='option'; btn1.innerText='Claro que sim 😈';
+    const btn2=document.createElement('button'); btn2.className='option'; btn2.innerText='Talvez… depende da foto 👀';
+    chat.appendChild(btn1); chat.appendChild(btn2);
+    typing.textContent='online';
+    btn1.onclick=()=>{ addBubble('me',btn1.innerText); btn1.remove(); btn2.remove(); r(); };
+    btn2.onclick=()=>{ addBubble('me',btn2.innerText); btn1.remove(); btn2.remove(); r(); };
+  });
+
+  typing.textContent='digitando…';
+  await wait(1200);
+  addBubble('them',`Nossa, ${userName}… você me deixou toda animada 😘 antes de te mostrar tudo, preciso que clique abaixo e libere meu conteúdo exclusivo.`);
+  typing.textContent='online';
+  ctaBar.style.display='block';
+}
+
+// Evento no checkout
+checkoutBtn.addEventListener('click', () => {
+  fbq('track', 'InitiateCheckout');
+});
+
+startChat();
+</script>
+</body>
+</html>
