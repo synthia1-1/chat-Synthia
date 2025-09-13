@@ -107,7 +107,7 @@ async function startChat(){
         userName = nameInput.value.trim();
         addBubble('me', userName);
 
-        // dispara evento Lead
+        // 🔹 dispara evento Lead
         fbq('track', 'Lead');
 
         nameInput.remove();
@@ -127,4 +127,48 @@ async function startChat(){
     const btn2=document.createElement('button'); btn2.className='option'; btn2.innerText='Com certeza.';
     chat.appendChild(btn1); chat.appendChild(btn2);
     typing.textContent='online';
-    btn1.onclick=()=>{ addBubble('me',btn1.innerText);
+    btn1.onclick=()=>{ addBubble('me',btn1.innerText); btn1.remove(); btn2.remove(); r(); };
+    btn2.onclick=()=>{ addBubble('me',btn2.innerText); btn1.remove(); btn2.remove(); r(); };
+  });
+
+  await wait(1000);
+  addBubble('them','Você prefere que eu seja mais safadinha 😈 ou mais romântica 💕?');
+  await new Promise(r=>{
+    const btn1=document.createElement('button'); btn1.className='option'; btn1.innerText='Safadinha 😏';
+    const btn2=document.createElement('button'); btn2.className='option'; btn2.innerText='Romântica 💋';
+    chat.appendChild(btn1); chat.appendChild(btn2);
+    typing.textContent='online';
+    btn1.onclick=()=>{ addBubble('me',btn1.innerText); btn1.remove(); btn2.remove(); r(); };
+    btn2.onclick=()=>{ addBubble('me',btn2.innerText); btn1.remove(); btn2.remove(); r(); };
+  });
+
+  typing.textContent='digitando…';
+  await wait(1200);
+  addBubble('them',`E se eu te mandasse uma foto minha agora… você bateria uma pra mim? 🔥`);
+  await new Promise(r=>{
+    const btn1=document.createElement('button'); btn1.className='option'; btn1.innerText='Claro que sim 😈';
+    const btn2=document.createElement('button'); btn2.className='option'; btn2.innerText='Talvez… depende da foto 👀';
+    chat.appendChild(btn1); chat.appendChild(btn2);
+    typing.textContent='online';
+    btn1.onclick=()=>{ addBubble('me',btn1.innerText); btn1.remove(); btn2.remove(); showPhoto(); r(); };
+    btn2.onclick=()=>{ addBubble('me',btn2.innerText); btn1.remove(); btn2.remove(); showPhoto(); r(); };
+  });
+}
+
+async function showPhoto(){
+  await wait(1200);
+  addBubble('them',`<img src="https://i.postimg.cc/L4YPh8xj/Foto2.jpg" style="max-width:100%; border-radius:12px;">`);
+  await wait(1200);
+  addBubble('them',`Nossa, ${userName}… fiquei toda animada 😘 não vejo a hora de você ver meu lado mais secreto. Clique abaixo e libere meu conteúdo exclusivo agora mesmo 🔥💦`);
+  ctaBar.style.display='block';
+
+  // 🔹 dispara evento InitiateCheckout quando aparece o botão
+  document.getElementById('cta').addEventListener('click', ()=>{
+    fbq('track', 'InitiateCheckout');
+  });
+}
+
+startChat();
+</script>
+</body>
+</html>
